@@ -8,9 +8,8 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-
 app.get("/", (req, res) => {
-  res.render("minSide", { title: "home" });
+  res.render("home", { title: "home" });
 });
 
 app.get("/veiledning", (req, res) => {

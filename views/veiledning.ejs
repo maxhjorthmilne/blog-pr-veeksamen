@@ -2,6 +2,20 @@
     <%- include("./partials/head.ejs") %>
 <body>
     <%- include("./partials/nav.ejs") %>
-   <h2>hei</h2>
+   <h1>Lag bruker, gi ssh, rettigheter og start node app!</h1>
+   <p>1. skriv sudo adduser "user", og lag passord til bruker </p>
+   <img src="/img/step1.png" alt="">
+   <br>
+   <br>
+   <p>2. bytt bruker til "user" med kommando: "su - "user"</p>
+   <img src="/img/step2.png" alt="">
+    <br>
+   <p>3.cd inn i .ssh og skriv: "ssh-keygen"</p>
+   <img src="/img/step3.png" alt="">
+   <p>4. skriv: "nano authorized" og lim in public keyen til brukeren som skal ha tilgang </p>
+   <img src="/img/step4.png" alt="">
+   <h3>lag en node applikasjon!</h3>
+   <p>Skriv "node app.js" inn i terminalen på prosjektet ditt</p>
+   <img src="/img/step5.png" alt="">
 </body>
 </html>
