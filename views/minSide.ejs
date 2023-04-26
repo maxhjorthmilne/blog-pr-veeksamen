@@ -1,0 +1,46 @@
+<html>
+    <%- include("./partials/head.ejs") %>
+    <%- include("./partials/nav.ejs") %>
+    <div class="form-wrapper">
+        <form class="login">
+            <h2>logg inn!</h2>
+            <input type="username" name="username" placeholder="username">
+
+            <input type="password" name="password" placeholder="password">
+            <button type="submit">submit</button>
+        </form>
+        <form class="addUser">
+            <h2>REGISTRER:</h2>
+            <input type="username" name="username" placeholder="username" />
+            <br />
+            <br />
+            <input type="password" name="password" placeholder="password" />
+            <br />
+            <br />
+            <button >Create account</button>
+          </form>
+    </div>
+    <section>
+        <form class="d-none page2">
+            <h2>legg blogg:</h2>
+            <input type="text" name="tittel" placeholder="tittel" required>
+            <input type="text" name="tekst" placeholder="tekst" required>
+            <input type="text" name="forfatter" placeholder="forfatter" required>
+            <input type="text" name="bloggID" placeholder="bloggID" required>
+    
+            <button class="addbtn">add blogg!</button>
+            <br>
+            <br>
+        </form>
+        <form class="d-none delete">
+            <input type="text" name="bloggID" placeholder="id">
+            <button>Remove blogg</button>
+        </form>
+    </section>
+    <div class="div" id="parent">
+    </div>
+    <form class="addBlogg">
+
+    </form>
+    <button class="logout">logout</button>
+</html>

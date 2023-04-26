@@ -1,0 +1,35 @@
+.blog{
+  display: inline-block;
+    width: 500px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 5px; /* 5px rounded corners */
+    padding: 5px 5px;
+    text-align: center;
+    margin:auto;
+    max-width: 100%;
+}
+
+
+@media (max-width: 1499px) {
+  /* CSS that should be displayed if width is equal to or less than 800px goes here */
+  .blog{
+    width: 400px;
+  }
+}
+
+@media(max-width: 1199px){
+  .blog{
+    width: 300px;
+  }
+}
+
+@media(max-width: 610px){
+  .blog{
+    width: 250px;
+  }
+}
+
+
+.navbar-nav{
+  width: 100%;
+}

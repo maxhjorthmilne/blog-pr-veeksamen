@@ -1,0 +1,30 @@
+{
+  "name": "blog-pr-veeksamen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxhjorthmilne/blog-pr-veeksamen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maxhjorthmilne/blog-pr-veeksamen/issues"
+  },
+  "homepage": "https://github.com/maxhjorthmilne/blog-pr-veeksamen#readme",
+  "dependencies": {
+    "@firebase/auth": "^0.23.0",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "firebase": "^9.20.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.80.0",
+    "webpack-cli": "^5.0.2"
+  }
+}
