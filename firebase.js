@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app'
 import "firebase/auth";
 import {
     getFirestore, collection, getDocs,
-    addDoc, query, where, onSnapshot, doc, deleteDoc
+    addDoc, query, where, onSnapshot, doc, deleteDoc, updateDoc, increment
 } from 'firebase/firestore'
 import {
     getAuth,
@@ -38,8 +38,6 @@ const veileder = document.querySelector(".veileder")
 //query
 const q = query(colRef, where("author", "==", "max05hm@gmail.com"));
 
-//user collection ref
-const userColRef = collection(db, "user")
 //form login ref
 const login = document.querySelector(".login")
 //form blogg ref
@@ -59,34 +57,80 @@ const allBloggsElement = document.getElementById("allBlogs")
 //get all blogs
 getDocs(colRef)
     .then((snapshot) => {
-    let blogs = [];
-    snapshot.docs.forEach((doc)=>{
-        blogs.push({...doc.data(), id: doc.id});
-        let item = doc.data();
-        const newDiv = document.createElement('div');
-        newDiv.classList.add("blog")
-        newDiv.innerHTML += `<div>
-        <br data id:${doc.id}>tittel: ${doc.data().tittel}
-        <br>innhold: ${doc.data().tekst}
-        <br>forfatter: ${doc.data().forfatter}
+        let blogs = [];
+        snapshot.docs.forEach((localDoc) => {
+            blogs.push({ ...localDoc.data(), id: localDoc.id });
+            let item = localDoc.data();
+            const newDiv = document.createElement('div');
+            newDiv.classList.add("blog")
+            newDiv.innerHTML += `<div>
+        <br data id:${localDoc.id}>tittel: ${localDoc.data().tittel}
+        <br>innhold: ${localDoc.data().tekst}
+        <br>forfatter: ${localDoc.data().forfatter}
+        <br><p class="likes">likes: ${localDoc.data().likes}</p>
         </div>
         `
-       
-                let commentDiv = document.createElement("div");
-                commentDiv.classList.add("comment-container");
+            //like function
 
 
-                let input = document.createElement("input")
-                input.classList.add("comment-input")
-                input.setAttribute("type", "text")
-                input.setAttribute("name", "commentContent")
-                input.setAttribute("required", "")
-                commentDiv.appendChild(input)
+            let likeBtn = document.createElement("button")
+            let removeLike = document.createElement("button")
+            removeLike.classList.add("d-none")
+            likeBtn.classList.add("like");
+            likeBtn.innerText="like"
+            removeLike.innerText="unlike"
+            const docRef = doc(db, "blogs", localDoc.id)
+            
+            likeBtn.addEventListener("click", (e)=>{ 
+                updateDoc(docRef, { 
+                    likes:  increment(1)
 
-                let submitComment = document.createElement("button")
-                submitComment.classList.add("comment-submit")
-                submitComment.innerText = "Submit Comment"
-                commentDiv.appendChild(submitComment)
+                })
+                .then(()=>{
+                    console.log(localDoc.data().likes + 1)
+                    removeLike.classList.remove("d-none")
+                    likeBtn.classList.add("d-none")
+                })
+
+                
+            })
+            //unlike
+
+            removeLike.addEventListener("click", (e) =>{
+                updateDoc(docRef, {
+                    likes: increment(-1)
+                })
+                .then(()=>{
+                    console.log(localDoc.data().likes)
+                    removeLike.classList.add("d-none")
+                    likeBtn.classList.remove("d-none")
+                })
+
+            })
+
+            //if user is logged in, it cant like own bloggs
+
+            const loggedInUser = localStorage.getItem("user")
+            if(loggedInUser === localDoc.data().forfatter){
+                likeBtn.classList.add("d-none")
+            }
+
+
+            let commentDiv = document.createElement("div");
+            commentDiv.classList.add("comment-container");
+
+
+            let input = document.createElement("input")
+            input.classList.add("comment-input")
+            input.setAttribute("type", "text")
+            input.setAttribute("name", "commentContent")
+            input.setAttribute("required", "")
+            commentDiv.appendChild(input)
+
+            let submitComment = document.createElement("button")
+            submitComment.classList.add("comment-submit")
+            submitComment.innerText = "Submit Comment"
+            commentDiv.appendChild(submitComment)
 
 
             // Adding comment
@@ -96,35 +140,40 @@ getDocs(colRef)
                     commentContent: input.value,
                     blogID: item.bloggID
                 })
-                .then(() => {
-                    input.value = "";
-                    console.log("Comment Added")
-                    location.reload()
-                })
-                .catch((err) => {
-                    console.log(err.message)
-                })
-            })
-                //getting comments
-                getDocs(colRefCom)
-                    .then((snapshot) => {
-                        snapshot.docs.forEach(doc => {
-                            let commentItem = doc.data();
-
-                            if (commentItem.blogID === item.bloggID) {
-                                let commentp = document.createElement("p");
-                                commentp.classList.add("comment-p")
-                                commentp.innerText = `Comment: ${commentItem.commentContent}`
-                                commentDiv.appendChild(commentp)
-
-                            }
-                        })
+                    .then(() => {
+                        input.value = "";
+                        console.log("Comment Added")
+                        location.reload()
                     })
-                    allBloggsElement.appendChild(newDiv);
-                    newDiv.appendChild(commentDiv)
-    })
+                    .catch((err) => {
+                        console.log(err.message)
+                    })
+            })
+            //getting comments
+            getDocs(colRefCom)
+                .then((snapshot) => {
+                    snapshot.docs.forEach(doc => {
+                        let commentItem = doc.data();
 
-  });
+                        if (commentItem.blogID === item.bloggID) {
+                            let commentp = document.createElement("p");
+                            commentp.classList.add("comment-p")
+                            commentp.innerText = `Comment: ${commentItem.commentContent}`
+                            commentDiv.appendChild(commentp)
+
+                        }
+                    })
+                })
+            allBloggsElement.appendChild(newDiv);
+            newDiv.appendChild(commentDiv)
+            newDiv.appendChild(likeBtn)
+            newDiv.appendChild(removeLike)
+        })
+
+    });
+
+
+
 
 
 
@@ -146,7 +195,9 @@ getDocs(colRef)
         <br data id:  ${doc.id}>tittel: ${doc.data().tittel}
         <br>innhold: ${doc.data().tekst}
         <br>forfatter: ${doc.data().forfatter}
+        <br>likes: ${doc.data().likes}
         </div>`;
+
 
                 let commentDiv = document.createElement("div");
                 commentDiv.classList.add("comment-container");
@@ -165,22 +216,22 @@ getDocs(colRef)
                 commentDiv.appendChild(submitComment)
 
 
-            // Adding comment
-            submitComment.addEventListener("click", (e) => {
-                e.preventDefault()
-                addDoc(colRefCom, {
-                    commentContent: input.value,
-                    blogID: item.bloggID
+                // Adding comment
+                submitComment.addEventListener("click", (e) => {
+                    e.preventDefault()
+                    addDoc(colRefCom, {
+                        commentContent: input.value,
+                        blogID: item.bloggID
+                    })
+                        .then(() => {
+                            input.value = "";
+                            console.log("Comment Added")
+                            location.reload()
+                        })
+                        .catch((err) => {
+                            console.log(err.message)
+                        })
                 })
-                .then(() => {
-                    input.value = "";
-                    console.log("Comment Added")
-                    location.reload()
-                })
-                .catch((err) => {
-                    console.log(err.message)
-                })
-            })
                 //getting comments
                 getDocs(colRefCom)
                     .then((snapshot) => {
@@ -328,12 +379,3 @@ removeBlogg.addEventListener("submit", (e) => {
             console.log("Object Deleted")
         })
 })
-
-
-
-
-
-
-
-
-
