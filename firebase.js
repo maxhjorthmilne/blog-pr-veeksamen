@@ -35,16 +35,13 @@ const colRef = collection(db, 'blogs')
 const colRefCom = collection(db, "comments")
 //veilderer link ref
 const veileder = document.querySelector(".veileder")
-//query
-const q = query(colRef, where("author", "==", "max05hm@gmail.com"));
-
 //form login ref
 const login = document.querySelector(".login")
 //form blogg ref
 const formwrapper = document.querySelector(".form-wrapper")
 const page2 = document.querySelector(".page2")
 let cred = localStorage.getItem("user")
-let div = document.querySelector(".allBlogs");
+
 //remove blogg ref
 const removeBlogg = document.querySelector(".delete")
 
@@ -114,7 +111,8 @@ getDocs(colRef)
             if(loggedInUser === localDoc.data().forfatter){
                 likeBtn.classList.add("d-none")
             }
-
+            
+            //comment elements
 
             let commentDiv = document.createElement("div");
             commentDiv.classList.add("comment-container");
